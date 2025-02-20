@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/wertnerve.github.io/static/css/main.e6c13ad2.css",
+    "main.js": "/wertnerve.github.io/static/js/main.29fefb4d.js",
+    "index.html": "/wertnerve.github.io/index.html",
+    "main.e6c13ad2.css.map": "/wertnerve.github.io/static/css/main.e6c13ad2.css.map",
+    "main.29fefb4d.js.map": "/wertnerve.github.io/static/js/main.29fefb4d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.29fefb4d.js"
+  ]
+}
