@@ -1,8 +1,7 @@
-// package.json
 {
   "name": "secure-journal",
   "version": "0.1.0",
-  "homepage": "homepage": "https://wertnerve.github.io/SecureJournalApp",
+  "homepage": "https://wertnerve.github.io/wertnerve.github.io",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -11,7 +10,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
+    "lucide-react": "^0.263.1",
+    "@radix-ui/react-alert-dialog": "^1.0.0"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -40,57 +42,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "tailwindcss": "^3.3.0"
   }
-}
-
-// public/index.html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Secure Journal Application" />
-    <title>Secure Journal</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html>
-
-// src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-// src/index.css
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-// src/App.js
-import React from 'react';
-import SecureJournalApp from './SecureJournalApp';
-
-function App() {
-  return (
-    <div className="App">
-      <SecureJournalApp />
-    </div>
-  );
 }
