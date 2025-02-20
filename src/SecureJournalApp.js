@@ -8,7 +8,95 @@ const SecureJournalApp = () => {
   const [status, setStatus] = useState('');
   const [therapistEmail, setTherapistEmail] = useState('');
 
-  // Rest of your existing functions (convertToPDF, getKeyFromPassword, encryptFile) remain the same
+  // Convert document to PDF if needed
+  const convertToPDF = async (file) => {
+    if (file.type === 'application/pdf') {
+      return file;
+    }
+    
+    // If it's a .doc/.docx file
+    if (file.type.includes('word') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = read(arrayBuffer);
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const textContent = utils.sheet_to_text(worksheet);
+      
+      // Create a simple PDF-like structure with the text content
+      const pdfBlob = new Blob([textContent], { type: 'application/pdf' });
+      return new File([pdfBlob], file.name.replace(/\.(doc|docx)$/, '.pdf'), { type: 'application/pdf' });
+    }
+    
+    return file;
+  };
+
+  // Generate encryption key from password
+  const getKeyFromPassword = async (password, salt) => {
+    const enc = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.importKey(
+      'raw',
+      enc.encode(password),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits', 'deriveKey']
+    );
+    
+    return window.crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256'
+      },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      true,
+      ['encrypt']
+    );
+  };
+
+  const encryptFile = useCallback(async (fileData, password) => {
+    try {
+      const reader = new FileReader();
+      
+      return new Promise((resolve, reject) => {
+        reader.onload = async (e) => {
+          try {
+            const salt = window.crypto.getRandomValues(new Uint8Array(16));
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            
+            const key = await getKeyFromPassword(password, salt);
+            
+            const fileContent = new Uint8Array(e.target.result);
+            const encryptedContent = await window.crypto.subtle.encrypt(
+              {
+                name: 'AES-GCM',
+                iv: iv
+              },
+              key,
+              fileContent
+            );
+
+            // Create a new file with the encrypted content
+            const encryptedBlob = new Blob([salt, iv, new Uint8Array(encryptedContent)]);
+            const encryptedFile = new File(
+              [encryptedBlob], 
+              `encrypted_${fileData.name}`,
+              { type: 'application/encrypted' }
+            );
+
+            resolve(encryptedFile);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsArrayBuffer(fileData);
+      });
+    } catch (error) {
+      console.error('Encryption error:', error);
+      throw error;
+    }
+  }, []);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
