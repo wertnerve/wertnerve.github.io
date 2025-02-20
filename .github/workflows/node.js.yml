@@ -21,10 +21,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm ci
 
       - name: Build React app
         run: npm run build
@@ -34,4 +35,4 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build # The folder the action should deploy.
+          folder: build
